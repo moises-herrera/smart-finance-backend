@@ -10,7 +10,7 @@ export interface IStock {
   /** Stock symbol. */
   symbol: string;
 
-  /** Stock current price. */
+  /** Stock current price in USD. */
   price: number;
 }
 

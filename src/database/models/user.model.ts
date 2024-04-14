@@ -29,6 +29,10 @@ export const UserSchema = new Schema<IUserDocument>(
       required: true,
       ref: 'currencies',
     },
+    balance: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,

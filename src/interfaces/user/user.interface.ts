@@ -22,6 +22,9 @@ export interface IUser {
 
   /** User's currency. */
   currency: Types.ObjectId;
+
+  /** User's balance in USD. */
+  balance: number;
 }
 
 /**

@@ -11,4 +11,5 @@ export const UserSchema = z.object({
     .email('El correo no es valido'),
   country: z.string().min(1, 'El país es requerido'),
   currency: z.string().min(1, 'La moneda es requerida'),
+  balance: z.number().default(0),
 });
