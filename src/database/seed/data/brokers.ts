@@ -1,5 +1,5 @@
 import { IBroker } from 'src/interfaces';
-import { countriesMapped } from 'src/database/seed/data';
+import { countriesMapped, stocksMapped } from 'src/database/seed/data';
 
 export const brokers: IBroker[] = [
   {
@@ -10,6 +10,16 @@ export const brokers: IBroker[] = [
       countriesMapped['CL'],
       countriesMapped['MX'],
       countriesMapped['PE'],
+    ],
+    stocks: [
+      stocksMapped['AAPL'],
+      stocksMapped['MSFT'],
+      stocksMapped['AMZN'],
+      stocksMapped['META'],
+      stocksMapped['GOOGL'],
+      stocksMapped['TSLA'],
+      stocksMapped['NVDA'],
+      stocksMapped['PYPL'],
     ],
   },
   {
@@ -22,6 +32,14 @@ export const brokers: IBroker[] = [
       countriesMapped['PE'],
       countriesMapped['RD'],
       countriesMapped['UY'],
+    ],
+    stocks: [
+      stocksMapped['ADBE'],
+      stocksMapped['NFLX'],
+      stocksMapped['CRM'],
+      stocksMapped['SHOP'],
+      stocksMapped['ZM'],
+      stocksMapped['SPOT'],
     ],
   },
 ];
