@@ -13,4 +13,5 @@ if (env !== 'production') {
 export default {
   PORT: process.env.PORT || 3000,
   DB_URI: process.env.DB_URI as string,
+  JWT_SECRET: process.env.JWT_SECRET as string,
 };
