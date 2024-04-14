@@ -20,5 +20,4 @@ export const RegisterSchema = z.object({
       passwordPattern,
       'La contraseña debe tener al menos una mayúscula, una minúscula y un número'
     ),
-  confirmPassword: z.string().min(1, 'La confirmación es requerida'),
 });

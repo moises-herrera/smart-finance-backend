@@ -1,10 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
 import { Country } from 'src/database/models';
-import {
-  ICountry,
-  ICountryDocument,
-  IStandardResponse,
-} from 'src/interfaces';
+import { ICountry, ICountryDocument, IStandardResponse } from 'src/interfaces';
 import { HttpError } from 'src/utils';
 
 /**
@@ -13,7 +9,7 @@ import { HttpError } from 'src/utils';
  * @returns The countries found.
  */
 export const findAll = async (): Promise<ICountryDocument[]> => {
-  const countries = await Country.find();
+  const countries = await Country.find().populate('currencies');
 
   return countries;
 };
@@ -27,7 +23,7 @@ export const findAll = async (): Promise<ICountryDocument[]> => {
 export const findById = async (
   id: string
 ): Promise<ICountryDocument | null> => {
-  const country = await Country.findById(id);
+  const country = await Country.findById(id).populate('currencies');
 
   if (!country) {
     throw new HttpError('El pais no existe', StatusCodes.NOT_FOUND);

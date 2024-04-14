@@ -23,7 +23,7 @@ import {
 export const findOne = async (
   filter: Record<string, unknown>
 ): Promise<IUserDocument | null> => {
-  const user = await User.findOne(filter);
+  const user = await User.findOne(filter).populate('country currency');
 
   return user;
 };
