@@ -1,11 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 import { ZodError, z } from 'zod';
 
 /**
  * Validate data with a schema.
- * 
- * @param schema The schema to validate the data. 
- * @returns A middleware function that validates the data. 
+ *
+ * @param schema The schema to validate the data.
+ * @returns A middleware function that validates the data.
  */
 export const validateData = (schema: z.ZodObject<any, any>) => {
   return (req: Request, res: Response, next: NextFunction) => {
@@ -19,13 +20,15 @@ export const validateData = (schema: z.ZodObject<any, any>) => {
         }));
 
         res
-          .status(400)
+          .status(StatusCodes.BAD_REQUEST)
           .json({ error: 'Datos invalidos', details: errorMessages });
 
         return;
       }
 
-      res.status(500).json({ error: 'Ha ocurrido un error' });
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ error: 'Ha ocurrido un error' });
     }
   };
 };
