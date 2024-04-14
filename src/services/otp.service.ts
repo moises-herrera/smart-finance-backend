@@ -100,8 +100,6 @@ export const verifyOTP = async (
     throw new HttpError('El código OTP no existe', StatusCodes.NOT_FOUND);
   }
 
-  console.log(compareDates(currentDate, timestamp));
-
   if (compareDates(currentDate, Number(timestamp)) > 0) {
     throw new HttpError('El código OTP ha expirado', StatusCodes.BAD_REQUEST);
   }
