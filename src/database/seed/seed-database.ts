@@ -1,7 +1,7 @@
 import { connection } from 'mongoose';
 import { dbConnect } from 'src/database';
-import { Broker, Country, Currency } from 'src/database/models';
-import { currencies, countries, brokers } from 'src/database/seed/data';
+import { Broker, Country, Currency, Stock } from 'src/database/models';
+import { currencies, countries, brokers, stocks } from 'src/database/seed/data';
 
 (async () => {
   try {
@@ -9,10 +9,12 @@ import { currencies, countries, brokers } from 'src/database/seed/data';
 
     await Currency.deleteMany({});
     await Country.deleteMany({});
+    await Stock.deleteMany({});
     await Broker.deleteMany({});
 
     await Currency.insertMany(currencies);
     await Country.insertMany(countries);
+    await Stock.insertMany(stocks);
     await Broker.insertMany(brokers);
 
     connection.close();
