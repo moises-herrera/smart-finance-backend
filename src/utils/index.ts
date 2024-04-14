@@ -5,3 +5,4 @@ export * from './http-error';
 export * from './error.handler';
 export * from './register-patterns';
 export * from './encryption.handler';
+export * from './date.handler';
