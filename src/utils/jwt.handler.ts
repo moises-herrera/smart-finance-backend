@@ -1,8 +1,6 @@
 import { JwtPayload, SignOptions, sign, verify } from 'jsonwebtoken';
 import { envConfig } from 'src/config';
 
-const JWT_SECRET = envConfig.JWT_SECRET;
-
 /**
  * Generate JWT token.
  *
@@ -11,7 +9,11 @@ const JWT_SECRET = envConfig.JWT_SECRET;
  * @returns The generated token.
  */
 export const generateToken = (id: string, options?: SignOptions): string => {
-  const token = sign({ id }, JWT_SECRET, options || { expiresIn: '1d' });
+  const token = sign(
+    { id },
+    envConfig?.JWT_SECRET,
+    options || { expiresIn: '1d' }
+  );
 
   return token;
 };
@@ -23,7 +25,7 @@ export const generateToken = (id: string, options?: SignOptions): string => {
  * @returns The decoded token.
  */
 export const verifyToken = (token: string): string | JwtPayload => {
-  const decoded = verify(token, JWT_SECRET);
+  const decoded = verify(token, envConfig?.JWT_SECRET);
 
   return decoded;
 };
