@@ -16,6 +16,12 @@ export const BrokerSchema = new Schema<IBrokerDocument>(
         ref: 'countries',
       },
     ],
+    stocks: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'stocks',
+      },
+    ],
   },
   {
     timestamps: true,

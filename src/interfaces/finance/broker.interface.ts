@@ -9,6 +9,9 @@ export interface IBroker {
 
   /** Countries where the broker operates. */
   countries: Types.ObjectId[];
+
+  /** Stocks available in the broker. */
+  stocks: Types.ObjectId[];
 }
 
 /**
