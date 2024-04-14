@@ -1,6 +1,8 @@
 import { NextFunction, Response } from 'express';
-import { RequestExtended } from 'src/interfaces';
+import { RequestExtended, Role } from 'src/interfaces';
 import { HttpError, handleHttpError, verifyToken } from 'src/utils';
+import * as userService from 'src/services/user.service';
+import { StatusCodes } from 'http-status-codes';
 
 /**
  * Validate a JWT token.
@@ -29,5 +31,36 @@ export const validateJwt = (
     const httpError =
       error instanceof HttpError ? error : new HttpError('Token invalido', 401);
     return handleHttpError(res, httpError);
+  }
+};
+
+/**
+ * Validate the role of a user.
+ *
+ * @param req The request object.
+ * @param res The response object.
+ * @param next The next function.
+ */
+export const validateAdminRole = async (
+  req: RequestExtended,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  const { id } = req;
+
+  try {
+    const user = await userService.findById(id as string);
+
+    if (!user) {
+      throw new HttpError('Usuario no encontrado', StatusCodes.NOT_FOUND);
+    }
+
+    if (user.role !== Role.Admin) {
+      throw new HttpError('Debe ser administrador', StatusCodes.FORBIDDEN);
+    }
+
+    next();
+  } catch (error) {
+    return handleHttpError(res, error);
   }
 };

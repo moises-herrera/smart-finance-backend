@@ -20,12 +20,14 @@ export const UserSchema = new Schema<IUserDocument>(
       required: true,
     },
     country: {
-      type: String,
+      type: Schema.Types.ObjectId,
       required: true,
+      ref: 'countries',
     },
     currency: {
-      type: String,
+      type: Schema.Types.ObjectId,
       required: true,
+      ref: 'currencies',
     },
   },
   {
@@ -33,6 +35,6 @@ export const UserSchema = new Schema<IUserDocument>(
   }
 );
 
-const User = model<IUserDocument>('User', UserSchema);
+const User = model<IUserDocument>('users', UserSchema);
 
 export default User;

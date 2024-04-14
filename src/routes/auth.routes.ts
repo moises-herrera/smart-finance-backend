@@ -1,5 +1,9 @@
 import { Router } from 'express';
-import { login, register, validateToken } from 'src/controllers';
+import {
+  login,
+  register,
+  validateToken,
+} from 'src/controllers/auth.controller';
 import { validateData, validateJwt } from 'src/middleware';
 import { LoginSchema, RegisterSchema } from 'src/schemas';
 
