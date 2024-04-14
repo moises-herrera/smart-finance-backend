@@ -1,5 +1,5 @@
 import { ICountry } from 'src/interfaces';
-import { currenciesMapped } from 'src/database/seed/data';
+import { currenciesMapped } from 'src/database/seed/data/currencies';
 import { Types } from 'mongoose';
 
 interface ISeedCountry extends ICountry {

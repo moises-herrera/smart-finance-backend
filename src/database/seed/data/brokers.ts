@@ -1,5 +1,6 @@
 import { IBroker } from 'src/interfaces';
-import { countriesMapped, stocksMapped } from 'src/database/seed/data';
+import { countriesMapped } from 'src/database/seed/data/countries';
+import { stocksMapped } from 'src/database/seed/data/stocks';
 
 export const brokers: IBroker[] = [
   {
