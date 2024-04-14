@@ -6,7 +6,7 @@ import {
   getCountryById,
   updateCountry,
 } from 'src/controllers/country.controller';
-import { validateAdminRole, validateData } from 'src/middleware';
+import { validateAdminRole, validateData, validateJwt } from 'src/middleware';
 import { CountrySchema } from 'src/schemas';
 
 const router = Router();
@@ -14,19 +14,19 @@ const router = Router();
 /**
  * Get all countries.
  */
-router.get('/', getCountries);
+router.get('/', validateJwt, getCountries);
 
 /**
  * Get a country by id.
  */
-router.get('/:id', getCountryById);
+router.get('/:id', validateJwt, getCountryById);
 
 /**
  * Create a new country.
  */
 router.post(
   '/',
-  [validateAdminRole, validateData(CountrySchema)],
+  [validateJwt, validateAdminRole, validateData(CountrySchema)],
   createCountry
 );
 
@@ -35,13 +35,13 @@ router.post(
  */
 router.put(
   '/:id',
-  [validateAdminRole, validateData(CountrySchema)],
+  [validateJwt, validateAdminRole, validateData(CountrySchema)],
   updateCountry
 );
 
 /**
  * Delete a country by id.
  */
-router.delete('/:id', validateAdminRole, deleteCountry);
+router.delete('/:id', [validateJwt, validateAdminRole], deleteCountry);
 
 export { router };

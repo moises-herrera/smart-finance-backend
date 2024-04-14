@@ -12,9 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(router);
 
-dbConnect().then(() => {
-  console.log('Database connected');
-});
+dbConnect();
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
