@@ -6,8 +6,8 @@
  * @returns The difference between the two dates. 
  */
 export const compareDates = (
-  date1: Date | string,
-  date2: Date | string
+  date1: Date | string | number,
+  date2: Date | string | number
 ): number => {
   return new Date(date1).getTime() - new Date(date2).getTime();
 };
