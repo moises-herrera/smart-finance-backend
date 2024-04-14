@@ -2,6 +2,9 @@ import { createTransport } from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { envConfig } from 'src/config';
 import { EmailData } from 'src/interfaces';
+import { findOne } from './user.service';
+import { HttpError } from 'src/utils';
+import { readFileSync } from 'fs';
 
 /**
  * The transporter to use to send emails.
@@ -26,6 +29,8 @@ const transporter = createTransport({
 export const sendEmail = async (
   data: EmailData
 ): Promise<SMTPTransport.SentMessageInfo> => {
+  await transporter.verify();
+
   return await transporter.sendMail({
     from: data.from,
     to: data.to,
@@ -33,4 +38,37 @@ export const sendEmail = async (
     text: data.body,
     html: data.body,
   });
+};
+
+/**
+ * Sends an email with a reset password OTP.
+ * 
+ * @param recipient The email address of the recipient. 
+ * @param otp The OTP to send. 
+ */
+export const sendResetPasswordEmail = async (
+  recipient: string,
+  otp: string
+): Promise<void> => {
+  const user = await findOne({ email: recipient });
+
+  if (!user) {
+    throw new HttpError('Usuario no encontrado', 404);
+  }
+
+  let emailBody = readFileSync(
+    `${__dirname}/../email-templates/reset-password.html`,
+    'utf8'
+  );
+
+  emailBody = emailBody.replace(/%OTP%/g, otp);
+
+  const emailData: EmailData = {
+    from: envConfig.EMAIL_USER,
+    to: recipient,
+    subject: 'Código de verificación',
+    body: emailBody,
+  };
+
+  await sendEmail(emailData);
 };
