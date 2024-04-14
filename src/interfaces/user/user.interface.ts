@@ -1,4 +1,5 @@
 import { Document, Types } from 'mongoose';
+import { Role } from 'src/interfaces';
 
 /**
  * Represents the user information.
@@ -12,6 +13,9 @@ export interface IUser {
 
   /** User's password. */
   password: string;
+
+  /** User's role. */
+  role: Role;
 
   /** User's country. */
   country: Types.ObjectId;

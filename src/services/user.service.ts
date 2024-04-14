@@ -1,6 +1,12 @@
 import { StatusCodes } from 'http-status-codes';
 import { User } from 'src/database/models';
-import { IAuth, IAuthResponse, IUser, IUserDocument } from 'src/interfaces';
+import {
+  IAuth,
+  IAuthResponse,
+  IUser,
+  IUserDocument,
+  Role,
+} from 'src/interfaces';
 import {
   encryptText,
   generateToken,
@@ -54,6 +60,7 @@ export const createOne = async (user: IUser): Promise<IAuthResponse> => {
   const createdUser = await User.create({
     ...user,
     password: passwordEncrypted,
+    role: Role.User,
   });
 
   const token = generateToken(createdUser.id);
