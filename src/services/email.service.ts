@@ -61,7 +61,7 @@ export const sendResetPasswordEmail = async (
     'utf8'
   );
 
-  emailBody = emailBody.replace(/%OTP%/g, otp);
+  emailBody = emailBody.replace(/%OTP_CODE%/g, otp);
 
   const emailData: EmailData = {
     from: envConfig.EMAIL_USER,

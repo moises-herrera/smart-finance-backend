@@ -1,10 +1,7 @@
 import { createHash, createCipheriv, createDecipheriv } from 'crypto';
 import { envConfig } from 'src/config';
 
-const CRYPT_PASSWORD = envConfig.CRYPT_PASSWORD;
-const CRYPT_IV = Buffer.from(envConfig.CRYPT_IV);
-const CRYPT_ALGORITHM = 'aes-256-cbc';
-const ivString = CRYPT_IV.toString('hex');
+const CRYPTO_ALGORITHM = 'aes-256-cbc';
 
 /**
  * Hashes a text using SHA-1.
@@ -57,8 +54,8 @@ const passwordDeriveBytes = (
  * @returns The encoded text.
  */
 export const encode = (text: string): string => {
-  const key = passwordDeriveBytes(CRYPT_PASSWORD, '', 100, 32);
-  const cipher = createCipheriv(CRYPT_ALGORITHM, key, ivString);
+  const key = passwordDeriveBytes(envConfig.CRYPTO_PASSWORD, '', 100, 32);
+  const cipher = createCipheriv(CRYPTO_ALGORITHM, key, envConfig.CRYPTO_IV);
   const firstPart = cipher.update(text, 'utf8');
   const secondPart = cipher.final();
   const encrypted = Buffer.concat([firstPart, secondPart]).toString('base64');
@@ -72,8 +69,8 @@ export const encode = (text: string): string => {
  * @returns The decoded text.
  */
 export const decode = (text: string): string => {
-  const key = passwordDeriveBytes(CRYPT_PASSWORD, '', 100, 32);
-  const decipher = createDecipheriv(CRYPT_ALGORITHM, key, ivString);
+  const key = passwordDeriveBytes(envConfig.CRYPTO_PASSWORD, '', 100, 32);
+  const decipher = createDecipheriv(CRYPTO_ALGORITHM, key, envConfig.CRYPTO_IV);
   const decrypted = decipher.update(text, 'base64', 'utf8');
   const result = decrypted + decipher.final();
   return result;

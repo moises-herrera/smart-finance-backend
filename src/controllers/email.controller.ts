@@ -6,9 +6,9 @@ import { HttpError, encode, handleHttpError } from 'src/utils';
 
 /**
  * Sends an OTP to the user's email.
- * 
- * @param req The request object. 
- * @param res The response object. 
+ *
+ * @param req The request object.
+ * @param res The response object.
  */
 export const sendOTP = async (req: Request, res: Response): Promise<void> => {
   try {

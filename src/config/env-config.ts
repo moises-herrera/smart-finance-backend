@@ -7,6 +7,8 @@ const envConfig: DotenvParseOutput = {
   PORT: currentEnvConfig.PORT,
   DB_URI: currentEnvConfig.DB_URI,
   JWT_SECRET: currentEnvConfig.JWT_SECRET,
+  CRYPTO_PASSWORD: currentEnvConfig.CRYPTO_PASSWORD,
+  CRYPTO_IV: currentEnvConfig.CRYPTO_IV,
   SMTP_SERVICE: currentEnvConfig.SMTP_SERVICE,
   SMTP_HOST: currentEnvConfig.SMTP_HOST,
   SMTP_PORT: currentEnvConfig.SMTP_PORT,

@@ -15,6 +15,7 @@ export const generateOTP = async (
     const otp = otpGenerator.generate(6, {
       lowerCaseAlphabets: false,
       upperCaseAlphabets: false,
+      specialChars: false,
     });
 
     const currentTimestamp = new Date();
