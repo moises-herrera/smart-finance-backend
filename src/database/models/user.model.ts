@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { IUserDocument } from 'src/interfaces';
+import { IUserDocument, Role } from 'src/interfaces';
 
 /**
  * The schema definition for the User entity.
@@ -18,6 +18,11 @@ export const UserSchema = new Schema<IUserDocument>(
     password: {
       type: String,
       required: true,
+    },
+    role: {
+      type: String,
+      required: true,
+      enum: [Role.Admin, Role.User],
     },
     country: {
       type: Schema.Types.ObjectId,
