@@ -64,3 +64,37 @@ export const validateAdminRole = async (
     return handleHttpError(res, error);
   }
 };
+
+/**
+ * Validate the permissions of a user.
+ *
+ * @param req The request object.
+ * @param res The response object.
+ * @param next The next function.
+ */
+export const validateUserSelfPermissions = async (
+  req: RequestExtended,
+  res: Response,
+  next: NextFunction
+) => {
+  const {
+    id: currentUserId,
+    params: { id },
+  } = req;
+
+  try {
+    const user = await userService.findById(currentUserId as string);
+
+    if (!user) {
+      throw new HttpError('Usuario no encontrado', StatusCodes.NOT_FOUND);
+    }
+
+    if (user.role !== Role.Admin && currentUserId !== id) {
+      throw new HttpError('No tiene permisos', StatusCodes.FORBIDDEN);
+    }
+
+    next();
+  } catch (error) {
+    return handleHttpError(res, error);
+  }
+};
