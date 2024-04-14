@@ -1,5 +1,6 @@
 import express from 'express';
-import { dbConnect, envConfig } from 'src/config';
+import { envConfig } from 'src/config';
+import { dbConnect } from 'src/database';
 
 const PORT = envConfig.PORT || 3000;
 
