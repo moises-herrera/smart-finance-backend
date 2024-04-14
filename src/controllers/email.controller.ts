@@ -26,7 +26,7 @@ export const sendOTP = async (req: Request, res: Response): Promise<void> => {
 
     await sendResetPasswordEmail(email, otpInstance.otp);
 
-    res.send({ message: 'El código OTP ha sido enviado', details: encoded });
+    res.send({ details: encoded });
   } catch (error) {
     const httpError =
       error instanceof HttpError
