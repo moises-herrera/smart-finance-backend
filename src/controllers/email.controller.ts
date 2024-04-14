@@ -14,6 +14,10 @@ export const sendOTP = async (req: Request, res: Response): Promise<void> => {
   try {
     const { email } = req.body;
 
+    if (!email) {
+      throw new HttpError('El email es requerido', StatusCodes.BAD_REQUEST);
+    }
+
     const { otpInstance, timestamp } = await generateOTP(email);
     const details = {
       timestamp,
