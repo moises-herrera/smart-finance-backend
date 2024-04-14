@@ -10,6 +10,12 @@ export const BrokerSchema = new Schema<IBrokerDocument>(
       type: String,
       required: true,
     },
+    countries: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'countries',
+      },
+    ],
   },
   {
     timestamps: true,

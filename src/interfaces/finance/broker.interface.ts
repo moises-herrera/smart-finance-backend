@@ -1,4 +1,4 @@
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 /**
  * Represents a stock broker entity.
@@ -6,6 +6,9 @@ import { Document } from 'mongoose';
 export interface IBroker {
   /** Broker name. */
   name: string;
+
+  /** Countries where the broker operates. */
+  countries: Types.ObjectId[];
 }
 
 /**
