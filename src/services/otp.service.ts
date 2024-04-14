@@ -1,6 +1,38 @@
+import { StatusCodes } from 'http-status-codes';
 import otpGenerator from 'otp-generator';
 import { OTP } from 'src/database/models';
-import { IOTPDocument } from 'src/interfaces';
+import { IOTPDocument, IStandardResponse, OTPVerify } from 'src/interfaces';
+import { HttpError, compareDates, decode } from 'src/utils';
+
+/**
+ * Finds an OTP instance that matches the query.
+ *
+ * @param query The query to match.
+ * @returns The OTP instance.
+ */
+export const findOne = async (
+  query: Record<string, unknown>
+): Promise<IOTPDocument | null> => {
+  try {
+    return await OTP.findOne(query);
+  } catch (error) {
+    throw error;
+  }
+};
+
+/**
+ * Finds an OTP instance by its ID.
+ *
+ * @param id The ID of the OTP instance.
+ * @returns The OTP instance.
+ */
+export const findById = async (id: string): Promise<IOTPDocument | null> => {
+  try {
+    return await findOne({ _id: id });
+  } catch (error) {
+    throw error;
+  }
+};
 
 /**
  * Generates an OTP and returns the OTP instance.
@@ -34,4 +66,55 @@ export const generateOTP = async (
   } catch (error) {
     throw error;
   }
+};
+
+/**
+ * Verifies an OTP.
+ *
+ * @param data The data required to verify the OTP.
+ * @returns The standard response.
+ */
+export const verifyOTP = async (
+  data: OTPVerify
+): Promise<IStandardResponse> => {
+  const currentDate = new Date();
+  const { verificationKey, otp, email } = data;
+
+  let decoded: string;
+
+  try {
+    decoded = decode(verificationKey);
+  } catch (error) {
+    throw new Error('Código de verificación inválido');
+  }
+
+  const { timestamp, otpId, email: otpEmail } = JSON.parse(decoded);
+
+  if (email !== otpEmail) {
+    throw new HttpError('El email no coincide', StatusCodes.BAD_REQUEST);
+  }
+
+  const otpInstance = await findById(otpId);
+
+  if (!otpInstance) {
+    throw new HttpError('El código OTP no existe', StatusCodes.NOT_FOUND);
+  }
+
+  console.log(compareDates(currentDate, timestamp));
+
+  if (compareDates(currentDate, Number(timestamp)) > 0) {
+    throw new HttpError('El código OTP ha expirado', StatusCodes.BAD_REQUEST);
+  }
+
+  if (otpInstance.otp !== otp) {
+    throw new HttpError('El código OTP es incorrecto', StatusCodes.BAD_REQUEST);
+  }
+
+  await OTP.deleteOne({ _id: otpId });
+
+  const response: IStandardResponse = {
+    message: 'El código OTP ha sido verificado',
+  };
+
+  return response;
 };
