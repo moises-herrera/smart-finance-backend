@@ -8,9 +8,9 @@ import {
   Role,
 } from 'src/interfaces';
 import {
-  encryptText,
+  hashText,
   generateToken,
-  verifyEncryptedText,
+  verifyHashedText,
   HttpError,
 } from 'src/utils';
 
@@ -55,7 +55,7 @@ export const createOne = async (user: IUser): Promise<IAuthResponse> => {
     );
   }
 
-  const passwordEncrypted = await encryptText(password);
+  const passwordEncrypted = await hashText(password);
 
   const createdUser = await User.create({
     ...user,
@@ -88,7 +88,7 @@ export const loginUser = async (auth: IAuth): Promise<IAuthResponse> => {
     throw new HttpError('Usuario no encontrado', StatusCodes.NOT_FOUND);
   }
 
-  const isPasswordValid = await verifyEncryptedText(
+  const isPasswordValid = await verifyHashedText(
     password,
     existingUser.password
   );
@@ -151,7 +151,7 @@ export const updateOne = async (
 
   if (user.password) {
     const userPassword = user.password;
-    user.password = await encryptText(userPassword);
+    user.password = await hashText(userPassword);
   }
 
   const updatedUser = await User.findByIdAndUpdate(id, user, {
