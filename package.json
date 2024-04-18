@@ -7,7 +7,8 @@
     "dev": "set NODE_ENV=development && ts-node-dev -r tsconfig-paths/register src/index.ts",
     "build": "rimraf ./dist && tsc && tsc-alias",
     "start": "set NODE_ENV=production && node ./dist/index.js",
-    "seed": "set NODE_ENV=development && ts-node-dev -r tsconfig-paths/register src/database/seed/seed-database.ts"
+    "seed": "set NODE_ENV=development && ts-node-dev -r tsconfig-paths/register src/database/seed/seed-database.ts",
+    "prepare": "husky install"
   },
   "keywords": [],
   "author": "",
@@ -39,6 +40,7 @@
     "tsc-alias": "^1.8.8",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.4.5",
-    "typescript-transform-paths": "^3.4.7"
+    "typescript-transform-paths": "^3.4.7",
+    "husky": "^8.0.0"
   }
 }

@@ -1,0 +1,16 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+IFS=$'\n'
+# Regex to match package-lock.json files
+PACKAGE_LOCK_REGEX="(^packages\/.*\/package-lock\.json)|(^package-lock\.json)"
+# Get the list of package-lock.json files that were changed
+PACKAGES=("$(git diff --name-only HEAD@{1} HEAD | grep -E "$PACKAGE_LOCK_REGEX")")
+
+if [[ ${PACKAGES[@]} ]]; then
+  for package in $PACKAGES; do
+    echo "$package was changed. Running npm install to update your dependencies..."
+    DIR=$(dirname package)
+    cd "$DIR" && npm install
+  done
+fi
