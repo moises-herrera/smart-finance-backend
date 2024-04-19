@@ -5,7 +5,7 @@ import {
   getOperationById,
   updateOperation,
 } from 'src/controllers/operation.controller';
-import { validateData, validateJwt } from 'src/middleware';
+import { validateAdminRole, validateData, validateJwt } from 'src/middleware';
 import { OperationSchema } from 'src/schemas';
 
 const router = Router();
@@ -30,7 +30,7 @@ router.post('/', [validateJwt, validateData(OperationSchema)], createOperation);
  */
 router.put(
   '/:id',
-  [validateJwt, validateData(OperationSchema)],
+  [validateJwt, validateAdminRole, validateData(OperationSchema)],
   updateOperation
 );
 
