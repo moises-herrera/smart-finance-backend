@@ -4,8 +4,11 @@ import {
   IStandardResponse,
   IOperation,
   IOperationDocument,
+  OperationType,
 } from 'src/interfaces';
 import { HttpError } from 'src/utils';
+import * as userService from 'src/services/user.service';
+import * as acquiredStockService from 'src/services/acquired-stock.service';
 
 /**
  * Find all operations of a user.
@@ -18,7 +21,7 @@ export const findAll = async (
 ): Promise<IOperationDocument[]> => {
   const operations = await Operation.find({
     user: userId,
-  });
+  }).populate('broker stock');
 
   return operations;
 };
@@ -33,7 +36,9 @@ export const findById = async (
   id: string,
   userId: string
 ): Promise<IOperationDocument | null> => {
-  const operation = await Operation.findById({ id, user: userId });
+  const operation = await Operation.findById({ id, user: userId }).populate(
+    'broker stock'
+  );
   if (!operation) {
     throw new HttpError('La operacion no existe', StatusCodes.NOT_FOUND);
   }
@@ -49,6 +54,41 @@ export const findById = async (
 export const createOne = async (
   operation: IOperation
 ): Promise<IStandardResponse<IOperationDocument>> => {
+  const user = await userService.findById(operation.user.toString());
+
+  if (!user) {
+    throw new HttpError('El usuario no existe', StatusCodes.NOT_FOUND);
+  }
+
+  if (operation.type === OperationType.Purchase) {
+    if (user.balance < operation.quantity) {
+      throw new HttpError(
+        'El usuario no tiene suficiente saldo para realizar la compra',
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    await acquiredStockService.buyStock(
+      operation.stock.toString(),
+      operation.user.toString(),
+      operation.quantity
+    );
+
+    user.balance -= operation.quantity;
+    await user.save();
+  }
+
+  if (operation.type === OperationType.Sale) {
+    await acquiredStockService.sellStock(
+      operation.stock.toString(),
+      operation.user.toString(),
+      operation.quantity
+    );
+
+    user.balance += operation.quantity;
+    await user.save();
+  }
+
   const createdOperation = await Operation.create(operation);
 
   const response: IStandardResponse<IOperationDocument> = {
