@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { RequestExtended } from 'src/interfaces';
+import { IOperation, RequestExtended } from 'src/interfaces';
 import {
   findById,
   createOne,
@@ -55,11 +55,13 @@ export const getOperationById = async (
  * @param res The response object.
  */
 export const createOperation = async (
-  req: Request,
+  req: RequestExtended,
   res: Response
 ): Promise<void> => {
   try {
-    const response = await createOne(req.body);
+    const { id: userId } = req;
+    const data: IOperation = { ...req.body, user: userId as string };
+    const response = await createOne(data);
     res.status(StatusCodes.CREATED).json(response);
   } catch (error) {
     handleHttpError(res, error);
