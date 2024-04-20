@@ -22,7 +22,7 @@ export const UserSchema = new Schema<IUserDocument>(
     role: {
       type: String,
       required: true,
-      enum: [Role.Admin, Role.User],
+      enum: Role,
     },
     country: {
       type: Schema.Types.ObjectId,

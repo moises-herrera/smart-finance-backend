@@ -12,7 +12,7 @@ export const OperationSchema = new Schema<IOperationDocument>(
     },
     type: {
       type: String,
-      enum: [OperationType.Purchase, OperationType.Sale],
+      enum: OperationType,
       required: true,
     },
     broker: {
