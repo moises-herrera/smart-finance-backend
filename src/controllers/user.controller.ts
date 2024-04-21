@@ -57,10 +57,10 @@ export const resetPassword = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { id } = req;
+    const { id: email } = req;
     const { password } = req.body;
 
-    const responseUser = await changeUserPassword(id as string, password);
+    const responseUser = await changeUserPassword(email as string, password);
 
     res.send(responseUser);
   } catch (error) {
