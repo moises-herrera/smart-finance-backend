@@ -12,7 +12,7 @@ export const generateToken = (id: string, options?: SignOptions): string => {
   const token = sign(
     { id },
     envConfig?.JWT_SECRET,
-    options || { expiresIn: '1d' }
+    options || { expiresIn: 24 * 60 * 60 * 1000 }
   );
 
   return token;

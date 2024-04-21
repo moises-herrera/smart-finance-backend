@@ -3,6 +3,7 @@ import { User } from 'src/database/models';
 import {
   IAuth,
   IAuthResponse,
+  IStandardResponse,
   IUser,
   IUserDocument,
   Role,
@@ -179,6 +180,36 @@ export const renewToken = async (id: string): Promise<IAuthResponse> => {
   const response: IAuthResponse = {
     accessToken: token,
     user,
+  };
+
+  return response;
+};
+
+/**
+ * Change user password.
+ *
+ * @param id The user id.
+ * @returns Standard response.
+ */
+export const changeUserPassword = async (
+  id: string,
+  password: string
+): Promise<IStandardResponse> => {
+  const encryptedPassword = await hashText(password);
+  const user = await User.findByIdAndUpdate(
+    id,
+    { password: encryptedPassword },
+    {
+      new: true,
+    }
+  );
+
+  if (!user) {
+    throw new HttpError('Usuario no encontrado', 404);
+  }
+
+  const response: IStandardResponse = {
+    message: 'Contraseña actualizada correctamente',
   };
 
   return response;

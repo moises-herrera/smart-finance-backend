@@ -14,7 +14,7 @@ const router = Router();
 /**
  * Get all countries.
  */
-router.get('/', validateJwt, getCountries);
+router.get('/', getCountries);
 
 /**
  * Get a country by id.

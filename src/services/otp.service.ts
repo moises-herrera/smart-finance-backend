@@ -2,7 +2,7 @@ import { StatusCodes } from 'http-status-codes';
 import otpGenerator from 'otp-generator';
 import { OTP } from 'src/database/models';
 import { IOTPDocument, IStandardResponse, OTPVerify } from 'src/interfaces';
-import { HttpError, compareDates, decode } from 'src/utils';
+import { HttpError, compareDates, decode, generateToken } from 'src/utils';
 
 /**
  * Finds an OTP instance that matches the query.
@@ -76,7 +76,7 @@ export const generateOTP = async (
  */
 export const verifyOTP = async (
   data: OTPVerify
-): Promise<IStandardResponse> => {
+): Promise<IStandardResponse<{ token: string }>> => {
   const currentDate = new Date();
   const { verificationKey, otp, email } = data;
 
@@ -110,8 +110,13 @@ export const verifyOTP = async (
 
   await OTP.deleteOne({ _id: otpId });
 
-  const response: IStandardResponse = {
+  const token = generateToken(email, {
+    expiresIn: 10 * 60 * 1000,
+  });
+
+  const response: IStandardResponse<{ token: string }> = {
     message: 'El código OTP ha sido verificado',
+    data: { token },
   };
 
   return response;
