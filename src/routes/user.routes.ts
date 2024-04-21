@@ -1,5 +1,9 @@
 import { Router } from 'express';
-import { getUserById, updateUser } from 'src/controllers/user.controller';
+import {
+  resetPassword,
+  getUserById,
+  updateUser,
+} from 'src/controllers/user.controller';
 import {
   validateData,
   validateJwt,
@@ -22,5 +26,10 @@ router.put(
   [validateJwt, validateUserSelfPermissions, validateData(UserSchema)],
   updateUser
 );
+
+/**
+ * Reset user password.
+ */
+router.post('/reset-password', validateJwt, resetPassword);
 
 export { router };
