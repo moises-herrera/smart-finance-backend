@@ -188,16 +188,18 @@ export const renewToken = async (id: string): Promise<IAuthResponse> => {
 /**
  * Change user password.
  *
- * @param id The user id.
+ * @param email The user email.
  * @returns Standard response.
  */
 export const changeUserPassword = async (
-  id: string,
+  email: string,
   password: string
 ): Promise<IStandardResponse> => {
   const encryptedPassword = await hashText(password);
-  const user = await User.findByIdAndUpdate(
-    id,
+  const user = await User.findOneAndUpdate(
+    {
+      email: email,
+    },
     { password: encryptedPassword },
     {
       new: true,
