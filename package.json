@@ -41,6 +41,6 @@
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.4.5",
     "typescript-transform-paths": "^3.4.7",
-    "husky": "^8.0.0"
+    "husky": "^9.0.11"
   }
 }
