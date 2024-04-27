@@ -1,5 +1,5 @@
 /**
- * All the availables operation types.
+ * All the available operation types.
  */
 export enum OperationType {
   /** Purchase type. */
