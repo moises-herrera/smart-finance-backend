@@ -67,7 +67,10 @@ export const createOne = async (user: IUser): Promise<IAuthResponse> => {
   const token = generateToken(createdUser.id);
 
   const response: IAuthResponse = {
-    user: createdUser,
+    user: {
+      ...createdUser.toJSON(),
+      password: '',
+    },
     accessToken: token,
   };
 
@@ -105,7 +108,10 @@ export const loginUser = async (auth: IAuth): Promise<IAuthResponse> => {
 
   const response: IAuthResponse = {
     accessToken: token,
-    user: existingUser,
+    user: {
+      ...existingUser.toJSON(),
+      password: '',
+    },
   };
 
   return response;
@@ -159,6 +165,10 @@ export const updateOne = async (
     new: true,
   });
 
+  if (updatedUser?.password) {
+    updatedUser.password = '';
+  }
+
   return updatedUser;
 };
 
@@ -179,7 +189,10 @@ export const renewToken = async (id: string): Promise<IAuthResponse> => {
 
   const response: IAuthResponse = {
     accessToken: token,
-    user,
+    user: {
+      ...user.toJSON(),
+      password: '',
+    },
   };
 
   return response;
