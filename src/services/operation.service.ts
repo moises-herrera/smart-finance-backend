@@ -69,8 +69,8 @@ export const createOne = async (
     }
 
     await acquiredStockService.buyStock(
-      operation.stock.toString(),
       operation.user.toString(),
+      operation.stock.toString(),
       operation.quantity
     );
 
@@ -80,8 +80,8 @@ export const createOne = async (
 
   if (operation.type === OperationType.Sale) {
     await acquiredStockService.sellStock(
-      operation.stock.toString(),
       operation.user.toString(),
+      operation.stock.toString(),
       operation.quantity
     );
 
