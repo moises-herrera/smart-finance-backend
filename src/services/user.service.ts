@@ -126,7 +126,7 @@ export const loginUser = async (auth: IAuth): Promise<IAuthResponse> => {
  */
 export const updateOne = async (
   id: string,
-  user: IUser
+  user: Partial<IUser>
 ): Promise<IUserDocument | null> => {
   const userToUpdate = await findById(id);
 
@@ -159,6 +159,8 @@ export const updateOne = async (
   if (user.password) {
     const userPassword = user.password;
     user.password = await hashText(userPassword);
+  } else {
+    delete user.password;
   }
 
   const updatedUser = await User.findByIdAndUpdate(id, user, {
