@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import { RequestExtended } from 'src/interfaces';
 import {
   createOne,
   deleteById,
@@ -12,15 +13,16 @@ import { handleHttpError } from 'src/utils';
 /**
  * Get all stocks.
  *
- * @param _req The request object.
+ * @param req The request object.
  * @param res The response object.
  */
 export const getStocks = async (
-  _req: Request,
+  req: RequestExtended,
   res: Response
 ): Promise<void> => {
   try {
-    const response = await findAll();
+    const { id: userId } = req;
+    const response = await findAll(userId as string);
     res.json(response);
   } catch (error) {
     handleHttpError(res, error);
@@ -34,12 +36,13 @@ export const getStocks = async (
  * @param res The response object.
  */
 export const getStockById = async (
-  req: Request,
+  req: RequestExtended,
   res: Response
 ): Promise<void> => {
   try {
+    const { id: userId } = req;
     const { id } = req.params;
-    const response = await findById(id);
+    const response = await findById(userId as string, id);
     res.json(response);
   } catch (error) {
     handleHttpError(res, error);
