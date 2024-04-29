@@ -1,19 +1,47 @@
 import { StatusCodes } from 'http-status-codes';
-import { Stock } from 'src/database/models';
-import {
-  IStock,
-  IStockDocument,
-  IStandardResponse,
-} from 'src/interfaces';
+import { Broker, Stock } from 'src/database/models';
+import { IStock, IStockDocument, IStandardResponse } from 'src/interfaces';
 import { HttpError } from 'src/utils';
+import * as userService from 'src/services/user.service';
 
 /**
- * Find all stocks.
+ * Find all the stocks available in the user's country.
  *
+ * @param userId The user id.
  * @returns The stocks found.
  */
-export const findAll = async (): Promise<IStockDocument[]> => {
-  const stocks = await Stock.find();
+export const findAll = async (userId: string): Promise<IStockDocument[]> => {
+  const user = await userService.findById(userId);
+
+  if (!user) {
+    throw new HttpError('El usuario no existe', StatusCodes.NOT_FOUND);
+  }
+
+  const countryId = user.country;
+
+  const stocks = await Broker.aggregate([
+    {
+      $match: {
+        countries: countryId,
+      },
+    },
+    {
+      $lookup: {
+        from: 'stocks',
+        localField: 'stocks',
+        foreignField: '_id',
+        as: 'stocks',
+      },
+    },
+    {
+      $unwind: '$stocks',
+    },
+    {
+      $replaceRoot: {
+        newRoot: '$stocks',
+      },
+    },
+  ]);
 
   return stocks;
 };
@@ -21,17 +49,56 @@ export const findAll = async (): Promise<IStockDocument[]> => {
 /**
  * Find a stock by id.
  *
+ * @param userId The user id.
  * @param id The stock id.
  * @returns The stock found.
  */
 export const findById = async (
+  userId: string,
   id: string
 ): Promise<IStockDocument | null> => {
-  const stock = await Stock.findById(id);
+  const user = await userService.findById(userId);
 
-  if (!stock) {
-    throw new HttpError('La accion no existe', StatusCodes.NOT_FOUND);
+  if (!user) {
+    throw new HttpError('El usuario no existe', StatusCodes.NOT_FOUND);
   }
+
+  const countryId = user.country;
+
+  const stockResult = await Broker.aggregate<IStockDocument>([
+    {
+      $match: {
+        countries: countryId,
+      },
+    },
+    {
+      $lookup: {
+        from: 'stocks',
+        localField: 'stocks',
+        foreignField: '_id',
+        as: 'stocks',
+      },
+    },
+    {
+      $unwind: '$stocks',
+    },
+    {
+      $replaceRoot: {
+        newRoot: '$stocks',
+      },
+    },
+    {
+      $match: {
+        _id: id,
+      },
+    },
+  ]);
+
+  if (!stockResult.length) {
+    throw new HttpError('La accion no esta disponible', StatusCodes.NOT_FOUND);
+  }
+
+  const stock = stockResult[0];
 
   return stock;
 };
