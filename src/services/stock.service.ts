@@ -41,6 +41,14 @@ export const findAll = async (userId: string): Promise<IStockDocument[]> => {
         newRoot: '$stocks',
       },
     },
+    {
+      $group: {
+        _id: '$_id',
+        label: { $first: '$label' },
+        symbol: { $first: '$symbol' },
+        price: { $first: '$price' },
+      },
+    },
   ]);
 
   return stocks;
