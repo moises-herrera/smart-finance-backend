@@ -17,6 +17,13 @@ export const validateJwt = (
   next: NextFunction
 ): void => {
   try {
+    if (
+      !req.headers.authorization ||
+      !req.headers.authorization.startsWith('Bearer ')
+    ) {
+      throw new HttpError('Esquema de autenticación invalido', 400);
+    }
+
     const token = req.headers.authorization?.split(' ').pop() || '';
 
     if (!token) {

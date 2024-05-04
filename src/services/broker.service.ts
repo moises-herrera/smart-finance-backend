@@ -8,8 +8,11 @@ import { HttpError } from 'src/utils';
  *
  * @returns The brokers found.
  */
-export const findAll = async (): Promise<IBrokerDocument[]> => {
-  const brokers = await Broker.find().populate('countries stocks');
+export const findAll = async (
+  filter: Record<string, string | number | boolean | undefined> = {},
+  include: string[] = []
+): Promise<IBrokerDocument[]> => {
+  const brokers = await Broker.find(filter).populate(include);
 
   return brokers;
 };
