@@ -49,6 +49,11 @@ export const findAll = async (userId: string): Promise<IStockDocument[]> => {
         price: { $first: '$price' },
       },
     },
+    {
+      $sort: {
+        label: 1,
+      },
+    },
   ]);
 
   return stocks;
