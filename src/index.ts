@@ -1,19 +1,11 @@
-import express from 'express';
-import { envConfig } from 'src/config';
-import { dbConnect } from 'src/database';
-import { router } from 'src/routes';
+import app from 'src/app';
 
-const PORT = envConfig.PORT || 3000;
+const main = (): void => {
+  const PORT = app.get('port');
 
-const app = express();
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+};
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.use(router);
-
-dbConnect();
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+main();
