@@ -3,6 +3,7 @@ import { RequestExtended } from 'src/interfaces';
 import {
   changeUserPassword,
   findById,
+  getBalanceByUserId,
   updateOne,
 } from 'src/services/user.service';
 import { handleHttpError } from 'src/utils';
@@ -63,6 +64,25 @@ export const resetPassword = async (
     const responseUser = await changeUserPassword(email as string, password);
 
     res.send(responseUser);
+  } catch (error) {
+    handleHttpError(res, error);
+  }
+};
+
+/**
+ * Get user balance.
+ *
+ * @param req The request object.
+ * @param res The response object.
+ */
+export const getUserBalance = async (
+  req: RequestExtended,
+  res: Response
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const response = await getBalanceByUserId(id as string);
+    res.json(response);
   } catch (error) {
     handleHttpError(res, error);
   }

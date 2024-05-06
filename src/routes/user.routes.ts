@@ -3,6 +3,7 @@ import {
   resetPassword,
   getUserById,
   updateUser,
+  getUserBalance,
 } from 'src/controllers/user.controller';
 import {
   validateData,
@@ -17,6 +18,11 @@ const router = Router();
  * Get a user by id.
  */
 router.get('/:id', [validateJwt, validateUserSelfPermissions], getUserById);
+
+/**
+ * Get user balance.
+ */
+router.get('/:id/balance', [validateJwt, validateUserSelfPermissions], getUserBalance);
 
 /**
  * Update a user.
