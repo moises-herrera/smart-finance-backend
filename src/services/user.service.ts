@@ -1,4 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
+import { Types } from 'mongoose';
 import { User } from 'src/database/models';
 import {
   IAuth,
@@ -35,7 +36,7 @@ export const findOne = async (
  * @returns The user found.
  */
 export const findById = async (id: string): Promise<IUserDocument | null> => {
-  const user = await findOne({ _id: id });
+  const user = await findOne({ _id: new Types.ObjectId(id) });
   return user;
 };
 
@@ -213,7 +214,7 @@ export const changeUserPassword = async (
   const encryptedPassword = await hashText(password);
   const user = await User.findOneAndUpdate(
     {
-      email: email,
+      email,
     },
     { password: encryptedPassword },
     {
@@ -230,4 +231,34 @@ export const changeUserPassword = async (
   };
 
   return response;
+};
+
+/**
+ * Get user balance.
+ *
+ * @param id The user id.
+ * @returns The user balance.
+ */
+export const getBalanceByUserId = async (
+  id: string
+): Promise<{ balance: number }> => {
+  const result = await User.aggregate<{ balance: number }>([
+    {
+      $match: {
+        _id: new Types.ObjectId(id),
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        balance: 1,
+      },
+    },
+  ]);
+
+  if (!result.length) {
+    throw new HttpError('Usuario no encontrado', 404);
+  }
+
+  return result[0];
 };
