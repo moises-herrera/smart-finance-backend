@@ -6,6 +6,11 @@ import { IOperationDocument, OperationType } from 'src/interfaces';
  */
 export const OperationSchema = new Schema<IOperationDocument>(
   {
+    currency: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'currencies',
+    },
     quantity: {
       type: Number,
       required: true,
