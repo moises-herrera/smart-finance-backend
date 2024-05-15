@@ -1,14 +1,18 @@
 import { Types, Document } from 'mongoose';
+import { OperationType } from 'src/interfaces';
 
 /**
  * Operation data stored in the database.
  */
 export interface IOperation {
+  /** Currency used to make the operation. */
+  currency: Types.ObjectId;
+
   /** Operation quantity. */
   quantity: number;
 
   /** Operation type. */
-  type: string;
+  type: OperationType;
 
   /** Broker id. */
   broker: Types.ObjectId;
