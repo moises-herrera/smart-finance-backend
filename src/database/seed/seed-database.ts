@@ -1,10 +1,21 @@
 import { connection } from 'mongoose';
 import { dbConnect } from 'src/database';
-import { Broker, Country, Currency, Stock } from 'src/database/models';
+import {
+  AcquiredStock,
+  Broker,
+  Country,
+  Currency,
+  Operation,
+  Stock,
+  User,
+} from 'src/database/models';
 import { currencies, countries, brokers, stocks } from 'src/database/seed/data';
 
 const deleteAllRecords = async (): Promise<void> => {
   try {
+    await AcquiredStock.deleteMany({});
+    await Operation.deleteMany({});
+    await User.deleteMany({});
     await Currency.deleteMany({});
     await Country.deleteMany({});
     await Stock.deleteMany({});
