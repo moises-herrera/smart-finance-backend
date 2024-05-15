@@ -1,4 +1,4 @@
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 /**
  * Represents the stock interface.
@@ -10,7 +10,10 @@ export interface IStock {
   /** Stock symbol. */
   symbol: string;
 
-  /** Stock current price in USD. */
+  /** Currency of the stock price. */
+  currency: Types.ObjectId;
+
+  /** Stock current price. */
   price: number;
 }
 

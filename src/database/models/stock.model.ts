@@ -14,6 +14,11 @@ export const StockSchema = new Schema<IStockDocument>(
       type: String,
       required: true,
     },
+    currency: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'currencies',
+    },
     price: {
       type: Number,
       required: true,
