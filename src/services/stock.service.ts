@@ -5,6 +5,7 @@ import {
   IStockDocument,
   IStandardResponse,
   ICurrencyDocument,
+  IStockInfoDocument,
 } from 'src/interfaces';
 import { HttpError } from 'src/utils';
 import * as userService from 'src/services/user.service';
@@ -16,7 +17,9 @@ import { USD_TO_COP } from 'src/constants';
  * @param userId The user id.
  * @returns The stocks found.
  */
-export const findAll = async (userId: string): Promise<IStockDocument[]> => {
+export const findAll = async (
+  userId: string
+): Promise<IStockInfoDocument[]> => {
   const user = await userService.findById(userId);
 
   if (!user) {
@@ -27,7 +30,7 @@ export const findAll = async (userId: string): Promise<IStockDocument[]> => {
   const userData = await user.populate('currency');
   const userCurrency = userData.currency as unknown as ICurrencyDocument;
 
-  const stocks = await Broker.aggregate([
+  const stocks: IStockInfoDocument[] = await Broker.aggregate([
     {
       $match: {
         countries: countryId,
