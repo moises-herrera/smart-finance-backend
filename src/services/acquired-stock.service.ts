@@ -17,7 +17,7 @@ export const findAll = async (
 ): Promise<IAcquiredStockDocument[]> => {
   const acquiredStocks = await AcquiredStock.find({
     user: userId,
-  }).populate('stock');
+  }).populate('stock currency');
 
   return acquiredStocks;
 };

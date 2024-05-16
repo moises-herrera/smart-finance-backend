@@ -67,7 +67,7 @@ export const findAll = async (userId: string): Promise<IStockDocument[]> => {
         label: 1,
         symbol: 1,
         price: 1,
-        currency: '$currency.code',
+        currency: 1,
       },
     },
     {
@@ -124,6 +124,26 @@ export const findById = async (
     {
       $match: {
         _id: id,
+      },
+    },
+    {
+      $lookup: {
+        from: 'currencies',
+        localField: 'currency',
+        foreignField: '_id',
+        as: 'currency',
+      },
+    },
+    {
+      $unwind: '$currency',
+    },
+    {
+      $project: {
+        _id: 1,
+        label: 1,
+        symbol: 1,
+        price: 1,
+        currency: 1,
       },
     },
   ]);

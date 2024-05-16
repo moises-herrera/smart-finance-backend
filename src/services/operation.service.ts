@@ -21,7 +21,7 @@ export const findAll = async (
 ): Promise<IOperationDocument[]> => {
   const operations = await Operation.find({
     user: userId,
-  }).populate('broker stock');
+  }).populate('broker stock currency');
 
   return operations;
 };
@@ -37,7 +37,7 @@ export const findById = async (
   userId: string
 ): Promise<IOperationDocument | null> => {
   const operation = await Operation.findById({ id, user: userId }).populate(
-    'broker stock'
+    'broker stock currency'
   );
   if (!operation) {
     throw new HttpError('La operacion no existe', StatusCodes.NOT_FOUND);
