@@ -1,8 +1,14 @@
 import { StatusCodes } from 'http-status-codes';
 import { Broker, Stock } from 'src/database/models';
-import { IStock, IStockDocument, IStandardResponse } from 'src/interfaces';
+import {
+  IStock,
+  IStockDocument,
+  IStandardResponse,
+  ICurrencyDocument,
+} from 'src/interfaces';
 import { HttpError } from 'src/utils';
 import * as userService from 'src/services/user.service';
+import { USD_TO_COP } from 'src/constants';
 
 /**
  * Find all the stocks available in the user's country.
@@ -18,6 +24,8 @@ export const findAll = async (userId: string): Promise<IStockDocument[]> => {
   }
 
   const countryId = user.country;
+  const userData = await user.populate('currency');
+  const userCurrency = userData.currency as unknown as ICurrencyDocument;
 
   const stocks = await Broker.aggregate([
     {
@@ -68,6 +76,15 @@ export const findAll = async (userId: string): Promise<IStockDocument[]> => {
         symbol: 1,
         price: 1,
         currency: 1,
+      },
+    },
+    {
+      $set: {
+        price:
+          userCurrency.code === 'USD'
+            ? '$price'
+            : { $multiply: ['$price', USD_TO_COP] },
+        conversionCurrency: userCurrency.code !== 'USD' ? userCurrency : null,
       },
     },
     {
