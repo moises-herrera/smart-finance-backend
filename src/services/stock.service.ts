@@ -47,6 +47,7 @@ export const findAll = async (userId: string): Promise<IStockDocument[]> => {
         label: { $first: '$label' },
         symbol: { $first: '$symbol' },
         price: { $first: '$price' },
+        currency: { $first: '$currency' },
       },
     },
     {
