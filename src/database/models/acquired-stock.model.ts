@@ -21,12 +21,20 @@ export const AcquiredStockSchema = new Schema<IAcquiredStockDocument>(
       required: true,
       default: 0,
     },
+    currency: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'currencies',
+    },
   },
   {
     timestamps: true,
   }
 );
 
-const AcquiredStock = model<IAcquiredStockDocument>('acquiredStocks', AcquiredStockSchema);
+const AcquiredStock = model<IAcquiredStockDocument>(
+  'acquiredStocks',
+  AcquiredStockSchema
+);
 
 export default AcquiredStock;
