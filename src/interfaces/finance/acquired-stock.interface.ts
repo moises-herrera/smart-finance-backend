@@ -1,5 +1,4 @@
-import { Document } from 'mongoose';
-import { Types } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 /**
  * Represents the acquired stock information.
@@ -13,6 +12,9 @@ export interface IAcquiredStock {
 
   /** The quantity. */
   totalQuantity: number;
+
+  /** The currency used to acquire the stock. */
+  currency: Types.ObjectId;
 }
 
 /**

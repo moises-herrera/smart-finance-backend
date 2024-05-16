@@ -17,7 +17,7 @@ export const findAll = async (
 ): Promise<IAcquiredStockDocument[]> => {
   const acquiredStocks = await AcquiredStock.find({
     user: userId,
-  }).populate('stock');
+  }).populate('stock currency');
 
   return acquiredStocks;
 };
@@ -47,16 +47,19 @@ export const createOne = async (
  * @param userId The user id.
  * @param stockId The stock id.
  * @param quantity The quantity of the stock.
+ * @param currencyId The currency id.
  * @returns The acquired stock created or updated.
  */
 export const buyStock = async (
   userId: string,
   stockId: string,
-  quantity: number
+  quantity: number,
+  currencyId: string
 ): Promise<IStandardResponse<IAcquiredStockDocument>> => {
   const acquiredStock = await AcquiredStock.findOne({
     user: userId,
     stock: stockId,
+    currency: currencyId,
   });
 
   if (acquiredStock) {
@@ -67,6 +70,7 @@ export const buyStock = async (
       user: userId,
       stock: stockId,
       totalQuantity: quantity,
+      currency: currencyId,
     });
 
     return {
@@ -87,16 +91,19 @@ export const buyStock = async (
  * @param userId The user id.
  * @param stockId The stock id.
  * @param quantity The quantity of the stock.
+ * @param currencyId The currency id.
  * @returns
  */
 export const sellStock = async (
   userId: string,
   stockId: string,
-  quantity: number
+  quantity: number,
+  currencyId: string
 ) => {
   const acquiredStock = await AcquiredStock.findOne({
     user: userId,
     stock: stockId,
+    currency: currencyId,
   });
 
   if (!acquiredStock) {

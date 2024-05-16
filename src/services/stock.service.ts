@@ -1,8 +1,15 @@
 import { StatusCodes } from 'http-status-codes';
 import { Broker, Stock } from 'src/database/models';
-import { IStock, IStockDocument, IStandardResponse } from 'src/interfaces';
+import {
+  IStock,
+  IStockDocument,
+  IStandardResponse,
+  ICurrencyDocument,
+  IStockInfoDocument,
+} from 'src/interfaces';
 import { HttpError } from 'src/utils';
 import * as userService from 'src/services/user.service';
+import { USD_TO_COP } from 'src/constants';
 
 /**
  * Find all the stocks available in the user's country.
@@ -10,7 +17,9 @@ import * as userService from 'src/services/user.service';
  * @param userId The user id.
  * @returns The stocks found.
  */
-export const findAll = async (userId: string): Promise<IStockDocument[]> => {
+export const findAll = async (
+  userId: string
+): Promise<IStockInfoDocument[]> => {
   const user = await userService.findById(userId);
 
   if (!user) {
@@ -18,8 +27,10 @@ export const findAll = async (userId: string): Promise<IStockDocument[]> => {
   }
 
   const countryId = user.country;
+  const userData = await user.populate('currency');
+  const userCurrency = userData.currency as unknown as ICurrencyDocument;
 
-  const stocks = await Broker.aggregate([
+  const stocks: IStockInfoDocument[] = await Broker.aggregate([
     {
       $match: {
         countries: countryId,
@@ -47,6 +58,36 @@ export const findAll = async (userId: string): Promise<IStockDocument[]> => {
         label: { $first: '$label' },
         symbol: { $first: '$symbol' },
         price: { $first: '$price' },
+        currency: { $first: '$currency' },
+      },
+    },
+    {
+      $lookup: {
+        from: 'currencies',
+        localField: 'currency',
+        foreignField: '_id',
+        as: 'currency',
+      },
+    },
+    {
+      $unwind: '$currency',
+    },
+    {
+      $project: {
+        _id: 1,
+        label: 1,
+        symbol: 1,
+        price: 1,
+        currency: 1,
+      },
+    },
+    {
+      $set: {
+        price:
+          userCurrency.code === 'USD'
+            ? '$price'
+            : { $multiply: ['$price', USD_TO_COP] },
+        conversionCurrency: userCurrency.code !== 'USD' ? userCurrency : null,
       },
     },
     {
@@ -103,6 +144,26 @@ export const findById = async (
     {
       $match: {
         _id: id,
+      },
+    },
+    {
+      $lookup: {
+        from: 'currencies',
+        localField: 'currency',
+        foreignField: '_id',
+        as: 'currency',
+      },
+    },
+    {
+      $unwind: '$currency',
+    },
+    {
+      $project: {
+        _id: 1,
+        label: 1,
+        symbol: 1,
+        price: 1,
+        currency: 1,
       },
     },
   ]);

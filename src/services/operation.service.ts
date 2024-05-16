@@ -21,7 +21,7 @@ export const findAll = async (
 ): Promise<IOperationDocument[]> => {
   const operations = await Operation.find({
     user: userId,
-  }).populate('broker stock');
+  }).populate('broker stock currency');
 
   return operations;
 };
@@ -37,7 +37,7 @@ export const findById = async (
   userId: string
 ): Promise<IOperationDocument | null> => {
   const operation = await Operation.findById({ id, user: userId }).populate(
-    'broker stock'
+    'broker stock currency'
   );
   if (!operation) {
     throw new HttpError('La operacion no existe', StatusCodes.NOT_FOUND);
@@ -60,6 +60,8 @@ export const createOne = async (
     throw new HttpError('El usuario no existe', StatusCodes.NOT_FOUND);
   }
 
+  const currencyId = user.currency;
+
   if (operation.type === OperationType.Purchase) {
     if (user.balance < operation.quantity) {
       throw new HttpError(
@@ -71,7 +73,8 @@ export const createOne = async (
     await acquiredStockService.buyStock(
       operation.user.toString(),
       operation.stock.toString(),
-      operation.quantity
+      operation.quantity,
+      currencyId.toString()
     );
 
     user.balance -= operation.quantity;
@@ -82,14 +85,18 @@ export const createOne = async (
     await acquiredStockService.sellStock(
       operation.user.toString(),
       operation.stock.toString(),
-      operation.quantity
+      operation.quantity,
+      currencyId.toString()
     );
 
     user.balance += operation.quantity;
     await user.save();
   }
 
-  const createdOperation = await Operation.create(operation);
+  const createdOperation = await Operation.create({
+    ...operation,
+    currency: currencyId,
+  });
 
   const response: IStandardResponse<IOperationDocument> = {
     message: 'La operacion fue creada correctamente',
