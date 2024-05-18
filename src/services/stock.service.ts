@@ -9,7 +9,7 @@ import {
 } from 'src/interfaces';
 import { HttpError } from 'src/utils';
 import * as userService from 'src/services/user.service';
-import { USD_TO_COP } from 'src/constants';
+import { USD_CONVERSION } from 'src/constants';
 
 /**
  * Find all the stocks available in the user's country.
@@ -86,7 +86,7 @@ export const findAll = async (
         price:
           userCurrency.code === 'USD'
             ? '$price'
-            : { $multiply: ['$price', USD_TO_COP] },
+            : { $multiply: ['$price', USD_CONVERSION['COP']] },
         conversionCurrency: userCurrency.code !== 'USD' ? userCurrency : null,
       },
     },

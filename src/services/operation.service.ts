@@ -5,10 +5,12 @@ import {
   IOperation,
   IOperationDocument,
   OperationType,
+  ICurrencyDocument,
 } from 'src/interfaces';
-import { HttpError } from 'src/utils';
+import { HttpError, convertCurrencyFromUSD } from 'src/utils';
 import * as userService from 'src/services/user.service';
 import * as acquiredStockService from 'src/services/acquired-stock.service';
+import * as stockService from 'src/services/stock.service';
 
 /**
  * Find all operations of a user.
@@ -60,10 +62,21 @@ export const createOne = async (
     throw new HttpError('El usuario no existe', StatusCodes.NOT_FOUND);
   }
 
-  const currencyId = user.currency;
+  const stock = await stockService.findById(
+    operation.user.toString(),
+    operation.stock.toString()
+  );
+
+  if (!stock) {
+    throw new HttpError('La accion no esta disponible', StatusCodes.NOT_FOUND);
+  }
+
+  const currency = user.currency as unknown as ICurrencyDocument;
+  const moneyAmount =
+    operation.quantity * convertCurrencyFromUSD(currency.code, stock.price);
 
   if (operation.type === OperationType.Purchase) {
-    if (user.balance < operation.quantity) {
+    if (user.balance < moneyAmount) {
       throw new HttpError(
         'El usuario no tiene suficiente saldo para realizar la compra',
         StatusCodes.BAD_REQUEST
@@ -74,10 +87,10 @@ export const createOne = async (
       operation.user.toString(),
       operation.stock.toString(),
       operation.quantity,
-      currencyId.toString()
+      currency.id
     );
 
-    user.balance -= operation.quantity;
+    user.balance -= moneyAmount;
     await user.save();
   }
 
@@ -86,48 +99,22 @@ export const createOne = async (
       operation.user.toString(),
       operation.stock.toString(),
       operation.quantity,
-      currencyId.toString()
+      currency.id
     );
 
-    user.balance += operation.quantity;
+    user.balance += moneyAmount;
     await user.save();
   }
 
   const createdOperation = await Operation.create({
     ...operation,
-    currency: currencyId,
+    moneyAmount,
+    currency: currency.id,
   });
 
   const response: IStandardResponse<IOperationDocument> = {
     message: 'La operacion fue creada correctamente',
     data: createdOperation,
-  };
-
-  return response;
-};
-
-/**
- * Update a operation by id.
- *
- * @param id The operation id.
- * @param operation Operation data.
- * @returns The operation updated.
- */
-export const updateById = async (
-  id: string,
-  operation: IOperation
-): Promise<IStandardResponse<IOperationDocument>> => {
-  const updatedOperation = await Operation.findByIdAndUpdate(id, operation, {
-    new: true,
-  });
-
-  if (!updatedOperation) {
-    throw new HttpError('La operacion no existe', StatusCodes.NOT_FOUND);
-  }
-
-  const response: IStandardResponse<IOperationDocument> = {
-    message: 'La operacion fue actualizada correctamente',
-    data: updatedOperation,
   };
 
   return response;
