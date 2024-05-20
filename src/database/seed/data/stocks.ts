@@ -108,6 +108,6 @@ export const stocks: ISeedStock[] = [
 ];
 
 export const stocksMapped: Record<string, Types.ObjectId> = stocks.reduce(
-  (record, stock) => ({ ...record, [stock.symbol]: stock._id }),
+  (record, stock) => ({ ...record, [stock.symbol]: stock.id }),
   {} as Record<string, Types.ObjectId>
 );

@@ -23,7 +23,7 @@ export const sendOTP = async (req: Request, res: Response): Promise<void> => {
       timestamp,
       email,
       message: 'El código OTP ha sido enviado',
-      otpId: otpInstance._id,
+      otpId: otpInstance.id,
     };
 
     const encoded = encode(JSON.stringify(details));

@@ -54,7 +54,7 @@ export const countries: ISeedCountry[] = [
 export const countriesMapped: Record<string, Types.ObjectId> = countries.reduce(
   (record, country) => ({
     ...record,
-    [country.code]: country._id,
+    [country.code]: country.id,
   }),
   {} as Record<string, Types.ObjectId>
 );

@@ -57,7 +57,7 @@ export const currenciesMapped: Record<string, Types.ObjectId> =
   currencies.reduce(
     (record, currency) => ({
       ...record,
-      [currency.code]: currency._id,
+      [currency.code]: currency.id,
     }),
     {} as Record<string, Types.ObjectId>
   );

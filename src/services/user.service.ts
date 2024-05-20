@@ -105,7 +105,7 @@ export const loginUser = async (auth: IAuth): Promise<IAuthResponse> => {
     );
   }
 
-  const token = generateToken(existingUser._id);
+  const token = generateToken(existingUser.id);
 
   const response: IAuthResponse = {
     accessToken: token,
