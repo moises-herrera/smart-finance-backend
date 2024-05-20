@@ -15,6 +15,10 @@ export const OperationSchema = new Schema<IOperationDocument>(
       type: Number,
       required: true,
     },
+    moneyAmount: {
+      type: Number,
+      required: true,
+    },
     type: {
       type: String,
       enum: OperationType,

@@ -11,6 +11,9 @@ export interface IOperation {
   /** Operation quantity. */
   quantity: number;
 
+  /** Amount of money used in the operation. */
+  moneyAmount: number;
+
   /** Operation type. */
   type: OperationType;
 
