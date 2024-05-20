@@ -27,8 +27,7 @@ export const findAll = async (
   }
 
   const countryId = user.country;
-  const userData = await user.populate('currency');
-  const userCurrency = userData.currency as unknown as ICurrencyDocument;
+  const userCurrency = user.currency as unknown as ICurrencyDocument;
 
   const stocks: IStockInfoDocument[] = await Broker.aggregate([
     {
