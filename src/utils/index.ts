@@ -6,3 +6,4 @@ export * from './error.handler';
 export * from './register-patterns';
 export * from './encryption.handler';
 export * from './date.handler';
+export * from './convert-currency.handler';
