@@ -10,6 +10,7 @@ import {
 import { HttpError } from 'src/utils';
 import * as userService from 'src/services/user.service';
 import { USD_CONVERSION } from 'src/constants';
+import { Types } from 'mongoose';
 
 /**
  * Find all the stocks available in the user's country.
@@ -143,7 +144,7 @@ export const findById = async (
     },
     {
       $match: {
-        _id: id,
+        _id: new Types.ObjectId(id),
       },
     },
     {

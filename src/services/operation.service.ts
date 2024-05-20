@@ -7,7 +7,7 @@ import {
   OperationType,
   ICurrencyDocument,
 } from 'src/interfaces';
-import { HttpError, convertCurrencyFromUSD } from 'src/utils';
+import { HttpError } from 'src/utils';
 import * as userService from 'src/services/user.service';
 import * as acquiredStockService from 'src/services/acquired-stock.service';
 import * as stockService from 'src/services/stock.service';
@@ -73,7 +73,7 @@ export const createOne = async (
 
   const currency = user.currency as unknown as ICurrencyDocument;
   const moneyAmount =
-    operation.quantity * convertCurrencyFromUSD(currency.code, stock.price);
+    operation.quantity * stock.price;
 
   if (operation.type === OperationType.Purchase) {
     if (user.balance < moneyAmount) {
