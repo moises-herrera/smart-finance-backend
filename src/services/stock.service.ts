@@ -27,8 +27,7 @@ export const findAll = async (
   }
 
   const countryId = user.country;
-  const userData = await user.populate('currency');
-  const userCurrency = userData.currency as unknown as ICurrencyDocument;
+  const userCurrency = user.currency as unknown as ICurrencyDocument;
 
   const stocks: IStockInfoDocument[] = await Broker.aggregate([
     {
@@ -86,7 +85,7 @@ export const findAll = async (
         price:
           userCurrency.code === 'USD'
             ? '$price'
-            : { $multiply: ['$price', USD_CONVERSION['COP']] },
+            : { $multiply: ['$price', USD_CONVERSION[userCurrency.code] ?? 1] },
         conversionCurrency: userCurrency.code !== 'USD' ? userCurrency : null,
       },
     },
@@ -118,6 +117,7 @@ export const findById = async (
   }
 
   const countryId = user.country;
+  const userCurrency = user.currency as unknown as ICurrencyDocument;
 
   const stockResult = await Broker.aggregate<IStockDocument>([
     {
@@ -164,6 +164,15 @@ export const findById = async (
         symbol: 1,
         price: 1,
         currency: 1,
+      },
+    },
+    {
+      $set: {
+        price:
+          userCurrency.code === 'USD'
+            ? '$price'
+            : { $multiply: ['$price', USD_CONVERSION[userCurrency.code] ?? 1] },
+        conversionCurrency: userCurrency.code !== 'USD' ? userCurrency : null,
       },
     },
   ]);
