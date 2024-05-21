@@ -72,8 +72,7 @@ export const createOne = async (
   }
 
   const currency = user.currency as unknown as ICurrencyDocument;
-  const moneyAmount =
-    operation.quantity * stock.price;
+  const moneyAmount = Math.round(operation.quantity * stock.price * 100) / 100;
 
   if (operation.type === OperationType.Purchase) {
     if (user.balance < moneyAmount) {

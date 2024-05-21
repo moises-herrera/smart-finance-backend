@@ -5,7 +5,7 @@ import { z } from 'zod';
  * Operation validation schema.
  */
 export const OperationSchema = z.object({
-  quantity: z.number().min(1, 'La cantidad debe ser mayor a cero'),
+  quantity: z.number().gt(0, 'La cantidad debe ser mayor a cero'),
   type: z.nativeEnum(OperationType, {
     errorMap: (issue, ctx) => {
       if (issue.code === z.ZodIssueCode.invalid_enum_value) {
