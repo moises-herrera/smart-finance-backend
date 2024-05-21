@@ -3,9 +3,13 @@ import { AcquiredStock } from 'src/database/models';
 import {
   IAcquiredStock,
   IAcquiredStockDocument,
+  ICurrencyDocument,
   IStandardResponse,
 } from 'src/interfaces';
 import { HttpError } from 'src/utils';
+import * as userService from 'src/services/user.service';
+import { USD_CONVERSION } from 'src/constants';
+import { Types } from 'mongoose';
 
 /**
  * Find all the acquired stocks of a user.
@@ -15,9 +19,79 @@ import { HttpError } from 'src/utils';
 export const findAll = async (
   userId: string
 ): Promise<IAcquiredStockDocument[]> => {
-  const acquiredStocks = await AcquiredStock.find({
-    user: userId,
-  }).populate('stock currency');
+  const user = await userService.findById(userId);
+
+  if (!user) {
+    throw new HttpError('El usuario no existe', StatusCodes.NOT_FOUND);
+  }
+
+  const userCurrency = user.currency as unknown as ICurrencyDocument;
+
+  const acquiredStocks = await AcquiredStock.aggregate([
+    {
+      $match: {
+        user: new Types.ObjectId(userId),
+      },
+    },
+    {
+      $lookup: {
+        from: 'stocks',
+        localField: 'stock',
+        foreignField: '_id',
+        as: 'stock',
+      },
+    },
+    {
+      $unwind: '$stock',
+    },
+    {
+      $lookup: {
+        from: 'currencies',
+        localField: 'currency',
+        foreignField: '_id',
+        as: 'currency',
+      },
+    },
+    {
+      $unwind: '$currency',
+    },
+    {
+      $set: {
+        stock: {
+          price:
+            userCurrency.code === 'USD'
+              ? '$stock.price'
+              : {
+                  $multiply: [
+                    '$stock.price',
+                    USD_CONVERSION[userCurrency.code] ?? 1,
+                  ],
+                },
+          conversionCurrency: userCurrency.code !== 'USD' ? userCurrency : null,
+        },
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        totalQuantity: 1,
+        stock: {
+          _id: 1,
+          label: 1,
+          symbol: 1,
+          price: 1,
+          currency: 1,
+          conversionCurrency: 1,
+        },
+        currency: {
+          _id: 1,
+          name: 1,
+          code: 1,
+        },
+        user: 1,
+      },
+    },
+  ]);
 
   return acquiredStocks;
 };
