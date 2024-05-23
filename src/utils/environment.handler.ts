@@ -10,7 +10,7 @@ export const parseEnvConfig = (): DotenvParseOutput => {
   const env = process.env.NODE_ENV || 'development';
 
   if (env === 'production') {
-    return getEnvConfig();
+    return process.env as DotenvParseOutput;
   }
 
   try {
