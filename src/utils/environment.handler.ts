@@ -1,4 +1,4 @@
-import { DotenvParseOutput, config } from 'dotenv';
+import { DotenvConfigOptions, DotenvParseOutput, config } from 'dotenv';
 import path from 'path';
 
 /**
@@ -8,10 +8,26 @@ import path from 'path';
  */
 export const parseEnvConfig = (): DotenvParseOutput => {
   const env = process.env.NODE_ENV || 'development';
-  const envPath = path
-    .resolve(process.cwd(), env !== 'production' ? `.env.${env}` : '.env')
-    .trim();
-  const result = config({ path: envPath });
+
+  if (env === 'production') {
+    return validateEnvConfig();
+  }
+
+  const envPath = path.resolve(process.cwd(), `.env.${env}`).trim();
+  const result = validateEnvConfig({ path: envPath });
+  return result;
+};
+
+/**
+ * Validates the environment configuration.
+ *
+ * @param options The options to configure the environment.
+ * @returns The parsed environment configuration.
+ */
+const validateEnvConfig = (
+  options?: DotenvConfigOptions
+): DotenvParseOutput => {
+  const result = config(options);
 
   if (result.error) {
     throw result.error;
