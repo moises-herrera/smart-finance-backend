@@ -1,0 +1,22 @@
+version: '3'
+services:
+  app-server:
+    image: moisesh21/smart-finance-backend:1.0.0
+    container_name: smart-finance-server
+    restart: always
+    ports:
+      - ${SERVER_PORT}:${SERVER_CONTAINER_PORT}
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      PORT: ${SERVER_CONTAINER_PORT}
+      DB_URI: ${DB_URI}
+      JWT_SECRET: ${JWT_SECRET}
+      CRYPT_PASSWORD: ${CRYPT_PASSWORD}
+      CRYPT_IV: ${CRYPT_IV}
+      SMTP_SERVICE: ${SMTP_SERVICE}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_SECURE: ${SMTP_SECURE}
+      EMAIL_USER: ${EMAIL_USER}
+      EMAIL_PASSWORD: ${EMAIL_PASSWORD}
+      SMTP_SENDER: ${SMTP_SENDER}
