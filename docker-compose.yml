@@ -1,0 +1,16 @@
+version: '3'
+services:
+  app-db:
+    env_file:
+      - .env.development
+    image: mongo:7.0.9
+    container_name: smart-finance-db
+    restart: always
+    ports:
+      - ${DB_PORT}:${DB_CONTAINER_PORT}
+    volumes:
+      - ./mongo-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+    command: ['--auth']
