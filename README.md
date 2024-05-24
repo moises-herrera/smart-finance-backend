@@ -1,5 +1,10 @@
 # Smart Finance API
 
+## Requisitos
+
+- [Node.js](https://nodejs.org/en)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+
 ## Uso
 
 ```
@@ -17,6 +22,11 @@ npm install
 
 ```
 cp .env.example .env.development
+```
+
+## Levantar la base de datos
+```
+docker-compose up -d
 ```
 
 ## Ejecutar seed
