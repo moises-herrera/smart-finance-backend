@@ -12,7 +12,7 @@ export const RegisterSchema = z.object({
     .email('El correo no es valido'),
   country: z.string().min(1, 'El país es requerido'),
   currency: z.string().min(1, 'La moneda es requerida'),
-  balance: z.number().default(0),
+  balance: z.number().min(1, 'El balance debe ser mayor a cero'),
   password: z
     .string()
     .min(8, 'La contraseña debe tener mínimo 8 carácteres')
