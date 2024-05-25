@@ -16,11 +16,14 @@ import { handleHttpError } from 'src/utils';
  * @param res The response object.
  */
 export const getBrokers = async (
-  _req: Request,
+  req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    const response = await findAll();
+    const { stockId } = req.query;
+    const filter = stockId ? { stocks: stockId as string } : {};
+    console.log(filter);
+    const response = await findAll(filter);
     res.json(response);
   } catch (error) {
     handleHttpError(res, error);
