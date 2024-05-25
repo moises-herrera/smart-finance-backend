@@ -38,9 +38,10 @@ export const findById = async (
   id: string,
   userId: string
 ): Promise<IOperationDocument | null> => {
-  const operation = await Operation.findById({ id, user: userId }).populate(
-    'broker stock currency'
-  );
+  const operation = await Operation.findOne({
+    _id: id,
+    user: userId,
+  }).populate('broker stock currency');
   if (!operation) {
     throw new HttpError('La operacion no existe', StatusCodes.NOT_FOUND);
   }
