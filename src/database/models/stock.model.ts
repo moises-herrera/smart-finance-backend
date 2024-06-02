@@ -23,6 +23,9 @@ export const StockSchema = new Schema<IStockDocument>(
       type: Number,
       required: true,
     },
+    icon: {
+      type: String,
+    },
   },
   {
     timestamps: true,

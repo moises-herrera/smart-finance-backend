@@ -22,7 +22,6 @@ export const getBrokers = async (
   try {
     const { stockId } = req.query;
     const filter = stockId ? { stocks: stockId as string } : {};
-    console.log(filter);
     const response = await findAll(filter);
     res.json(response);
   } catch (error) {

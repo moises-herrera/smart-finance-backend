@@ -59,6 +59,7 @@ export const findAll = async (
         symbol: { $first: '$symbol' },
         price: { $first: '$price' },
         currency: { $first: '$currency' },
+        icon: { $first: '$icon' },
       },
     },
     {
@@ -79,6 +80,7 @@ export const findAll = async (
         symbol: 1,
         price: 1,
         currency: 1,
+        icon: 1,
       },
     },
     {
@@ -165,6 +167,7 @@ export const findById = async (
         symbol: 1,
         price: 1,
         currency: 1,
+        icon: 1,
       },
     },
     {

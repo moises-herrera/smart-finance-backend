@@ -80,6 +80,7 @@ export const findAll = async (
           label: 1,
           symbol: 1,
           price: 1,
+          icon: 1,
           currency: 1,
           conversionCurrency: 1,
         },
