@@ -15,6 +15,9 @@ export interface IStock {
 
   /** Stock current price. */
   price: number;
+
+  /** Stock icon. */
+  icon?: string;
 }
 
 export interface IStockDocument extends IStock, Document {}
