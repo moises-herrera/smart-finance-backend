@@ -1,5 +1,6 @@
-import { Response } from 'express';
-import { HttpError } from '.';
+import { NextFunction, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
+import { HttpError, appLogger } from '.';
 
 /**
  * Handle HTTP errors.
@@ -8,14 +9,22 @@ import { HttpError } from '.';
  * @param error The error object.
  */
 export const handleHttpError = (res: Response, error: unknown): void => {
-  console.log(error);
+  appLogger.error(error);
 
   const httpError =
     error instanceof HttpError
       ? error
-      : new HttpError('Ha ocurrido un error', 500);
+      : new HttpError(
+          'Ha ocurrido un error',
+          StatusCodes.INTERNAL_SERVER_ERROR
+        );
 
-  res.status(httpError.statusCode).json(<Record<string, string>>{
-    message: httpError.message,
-  });
+  if ('status' in res) {
+    res.status(httpError.statusCode).json(<Record<string, string>>{
+      message: httpError.message,
+    });
+    return;
+  }
+
+  (res as NextFunction)();
 };
