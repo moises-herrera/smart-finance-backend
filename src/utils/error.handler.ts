@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { HttpError } from '.';
+import { HttpError, errorLogger } from '.';
 
 /**
  * Handle HTTP errors.
@@ -8,7 +8,7 @@ import { HttpError } from '.';
  * @param error The error object.
  */
 export const handleHttpError = (res: Response, error: unknown): void => {
-  console.log(error);
+  errorLogger.error(error);
 
   const httpError =
     error instanceof HttpError
