@@ -3,6 +3,7 @@ import morgan from 'morgan';
 import { envConfig } from 'src/config';
 import { dbConnect } from 'src/database';
 import { router } from 'src/routes';
+import { errorMiddleware } from 'src/middleware';
 
 const PORT = envConfig.PORT || 3000;
 
@@ -15,6 +16,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
 app.use(router);
+
+app.use(errorMiddleware);
 
 dbConnect();
 
