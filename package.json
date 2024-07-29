@@ -43,7 +43,7 @@
     "ts-patch": "^3.2.1",
     "tsc-alias": "^1.8.10",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.5.3",
+    "typescript": "^5.5.4",
     "typescript-transform-paths": "^3.4.7"
   }
 }
