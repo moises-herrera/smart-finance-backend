@@ -112,7 +112,7 @@ export const loginUser = async (auth: IAuth): Promise<IAuthResponse> => {
     user: {
       ...existingUser.toJSON(),
       password: '',
-    },
+    } as IUser,
   };
 
   return response;
@@ -195,7 +195,7 @@ export const renewToken = async (id: string): Promise<IAuthResponse> => {
     user: {
       ...user.toJSON(),
       password: '',
-    },
+    } as IUser,
   };
 
   return response;
