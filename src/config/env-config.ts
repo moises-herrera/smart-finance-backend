@@ -16,6 +16,7 @@ const envConfig: DotenvParseOutput = {
   EMAIL_USER: currentEnvConfig.EMAIL_USER,
   EMAIL_PASSWORD: currentEnvConfig.EMAIL_PASSWORD,
   SMTP_SENDER: currentEnvConfig.SMTP_SENDER,
+  WEB_CLIENT_URL: currentEnvConfig.WEB_CLIENT_URL,
 };
 
 export default envConfig;
